@@ -16,7 +16,6 @@ public enum TerrainType {
         this.displayName = displayName;
     }
 
-    public double getMovementModifier() { return movementModifier; }
     public boolean isAccessible() { return accessible; }
     public String getDisplayName() { return displayName; }
 }

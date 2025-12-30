@@ -11,7 +11,5 @@ public class CombatResult {
         this.message = message;
     }
 
-    public boolean isSuccess() { return success; }
-    public int getDamage() { return damage; }
     public String getMessage() { return message; }
 }

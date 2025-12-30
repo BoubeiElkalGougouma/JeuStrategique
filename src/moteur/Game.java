@@ -1,22 +1,18 @@
-// ==================== PACKAGE: com.isil.game.moteur ====================
 package moteur;
 
 import model.*;
 import ui.ConsoleUI;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 public class Game {
-    // Composants du jeu
     private GameMap map;
     private Player player1;
     private Player player2;
     private Player currentPlayer;
 
-    // Managers
     private CombatSystem combatSystem;
     private TurnManager turnManager;
     private BuildingManager buildingManager1;
@@ -24,11 +20,9 @@ public class Game {
     private UnitManager unitManager1;
     private UnitManager unitManager2;
 
-    // UI
     private Scanner scanner;
     private ConsoleUI ui;
 
-    // ========== CONSTRUCTEURS ==========
 
     public Game() {
         this(20, 20);
@@ -40,7 +34,6 @@ public class Game {
         this.player2 = new Player("Joueur2");
         this.currentPlayer = player1;
 
-        // Initialiser les managers
         this.combatSystem = new CombatSystem(map);
         this.turnManager = new TurnManager(player1, player2);
         this.buildingManager1 = new BuildingManager(player1, map);
@@ -51,7 +44,6 @@ public class Game {
         this.scanner = new Scanner(System.in);
         this.ui = new ConsoleUI(this);
 
-        // Donner des ressources de départ
         initializePlayerResources(player1);
         initializePlayerResources(player2);
     }
@@ -63,16 +55,12 @@ public class Game {
         player.getResources().put(ResourceType.FOOD, 300);
     }
 
-    // ========== DÉMARRAGE DU JEU ==========
-
     public void start() {
         ui.displayWelcome();
         ui.setupPlayers();
 
-        // Boucle principale du jeu
         gameLoop();
 
-        // Afficher le gagnant
         if (getWinner() != null) {
             ui.displayWinner(getWinner());
         }
@@ -104,25 +92,26 @@ public class Game {
         }
     }
 
-    // ========== GESTION DE CONSTRUCTION ==========
+    // gestion de la construction des bâtiments
 
     private void handleBuildingConstruction() {
         int type = ui.displayBuildingMenu();
         if (type > 0) {
-            if (buildBuilding(type)) {
+            int[] pos = ui.getBuildingPosition(); // ✅ Demande position
+            if (buildBuilding(type, pos[0], pos[1])) {
                 ui.displaySuccess("Bâtiment construit!");
             } else {
-                ui.displayError("Construction impossible! (Ressources insuffisantes)");
+                ui.displayError("Construction impossible!");
             }
         }
     }
 
-    public boolean buildBuilding(int buildingType) {
+    public boolean buildBuilding(int buildingType, int x, int y) {
         Building building = createBuilding(buildingType);
         if (building == null) return false;
 
         BuildingManager manager = getCurrentBuildingManager();
-        return manager.constructBuilding(building);
+        return manager.constructBuilding(building, x, y);
     }
 
     private Building createBuilding(int type) {
@@ -137,7 +126,7 @@ public class Game {
         };
     }
 
-    // ========== GESTION DES UNITÉS ==========
+    // gestion de l'entraînement des unités
 
     private void handleUnitTraining() {
         int type = ui.displayUnitMenu();
@@ -168,8 +157,7 @@ public class Game {
         };
     }
 
-    // ========== GESTION DU MOUVEMENT ==========
-
+    // gestion du déplacement des unités
     private void handleUnitMovement() {
         int unitIdx = ui.selectUnit("👣 Quelle unité déplacer?");
         if (unitIdx < 0) return;
@@ -188,8 +176,7 @@ public class Game {
         return unit.moveTo(x, y, map);
     }
 
-    // ========== GESTION DU COMBAT ==========
-
+    // gestion du combat
     private void handleCombat() {
         int attackerIdx = ui.selectUnit("⚔️  Quelle unité attaque?");
         if (attackerIdx < 0) return;
@@ -197,13 +184,11 @@ public class Game {
         int defenderIdx = ui.selectEnemyUnit();
         if (defenderIdx < 0) return;
 
-        // Sauvegarder les références avant le combat
         Unit attacker = currentPlayer.getUnits().get(attackerIdx);
         Unit defender = getEnemyPlayer().getUnits().get(defenderIdx);
 
         CombatResult result = attack(attackerIdx, defenderIdx);
 
-        // Afficher le résultat avec les unités sauvegardées
         ui.displayCombatResult(result, attacker, defender);
     }
 

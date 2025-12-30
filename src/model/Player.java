@@ -14,7 +14,6 @@ public class Player {
         this.units = new ArrayList<>();
         this.buildings = new ArrayList<>();
 
-        // Ressources initiales
         for (ResourceType type : ResourceType.values()) {
             resources.put(type, 150);
         }

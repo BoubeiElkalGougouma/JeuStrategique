@@ -18,9 +18,9 @@ public class ConsoleUI {
     }
 
     public void displayWelcome() {
-        System.out.println("\n╔════════════════════════════════════════════════════╗");
+        System.out.println("\n╔══════════════════════════════════════════════════════╗");
         System.out.println("║                                                      ║");
-        System.out.println("║        🎮  JEU DE STRATÉGIE - ISIL 25/26  🎮         ║");
+        System.out.println("║        🎮  JEU DE STRATÉGIE - ISIL 25/26  🎮          ║");
         System.out.println("║                                                      ║");
         System.out.println("║        Projet POO - Jeu Stratégique Java             ║");
         System.out.println("║                                                      ║");
@@ -51,35 +51,36 @@ public class ConsoleUI {
     }
 
     private void displayRules() {
-        System.out.println("\n" + "═".repeat(60));
-        System.out.println("           🎮 RÈGLES DU JEU 🎮");
-        System.out.println("═".repeat(60));
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("              REGLES DU JEU");
+        System.out.println("=".repeat(60));
 
-        System.out.println("\n OBJECTIF:");
-        System.out.println("   → Éliminez toutes les unités adverses pour gagner!");
+        System.out.println("\n[OBJECTIF]");
+        System.out.println("   -> Eliminez toutes les unites adverses pour gagner!");
 
-        System.out.println("\n💰 ÉCONOMIE:");
-        System.out.println("   • Construisez des bâtiments pour produire des ressources");
-        System.out.println("   • Utilisez l'option 6 pour collecter manuellement");
-        System.out.println("   • Chaque tour, les bâtiments produisent automatiquement");
+        System.out.println("\n[ECONOMIE]");
+        System.out.println("   * Construisez des batiments pour produire des ressources");
+        System.out.println("   * Utilisez l'option 6 pour collecter manuellement");
+        System.out.println("   * Chaque tour, les batiments produisent automatiquement");
 
-        System.out.println("\n⚔️  COMBAT:");
-        System.out.println("   • Soldat: Portée 1 (mêlée) - Équilibré");
-        System.out.println("   • Archer: Portée 3 (distance) - Fragile mais puissant");
-        System.out.println("   • Cavalier: Portée 1 (mêlée) - Mobile et fort");
+        System.out.println("\n[COMBAT]");
+        System.out.println("   * Soldat:   Portee 1 (melee) - Equilibre");
+        System.out.println("   * Archer:   Portee 3 (distance) - Fragile mais puissant");
+        System.out.println("   * Cavalier: Portee 1 (melee) - Mobile et fort");
 
-        System.out.println("\n📍 STRATÉGIE:");
-        System.out.println("   1. Déplacez vos unités près de l'ennemi (option 3)");
-        System.out.println("   2. Vérifiez les cibles à portée (option 5)");
-        System.out.println("   3. Attaquez quand vous êtes à portée (option 4)");
+        System.out.println("\n[STRATEGIE]");
+        System.out.println("   1. Deplacez vos unites pres de l'ennemi (option 3)");
+        System.out.println("   2. Verifiez les cibles a portee (option 5)");
+        System.out.println("   3. Attaquez quand vous etes a portee (option 4)");
 
-        System.out.println("\n🗺️  CARTE:");
-        System.out.println("   • 🔵 = Vos unités       • 🔴 = Unités ennemies");
-        System.out.println("   • 🏠 = Vos bâtiments    • 🏭 = Bâtiments ennemis");
+        System.out.println("\n[CARTE]");
+        System.out.println("   * U1 = Vos unites          * U2 = Unites ennemies");
+        System.out.println("   * B1 = Vos batiments       * B2 = Batiments ennemis");
+        System.out.println("   * .. = Plaine   ~~ = Eau   ^^ = Montagne   TT = Foret");
 
-        System.out.println("\n" + "═".repeat(60));
-        System.out.println("           Bonne chance et amusez-vous bien !");
-        System.out.println("═".repeat(60));
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("         Bonne chance et amusez-vous bien !");
+        System.out.println("=".repeat(60));
     }
 
     public void displayGameState() {
@@ -146,8 +147,8 @@ public class ConsoleUI {
     }
 
     public int displayMenu() {
-        System.out.println("\n╔════════════════════════════════════════╗");
-        System.out.println("║      MENU - " + String.format("%-20s", game.getCurrentPlayer().getName()) + "  ║");
+        System.out.println("\n╔════════════════════════════════════════════╗");
+        System.out.println("║      MENU - " + String.format("%-20s", game.getCurrentPlayer().getName()) + "          ║");
         System.out.println("╠════════════════════════════════════════ ══╣");
         System.out.println("║  1. Construire un bâtiment                ║");
         System.out.println("║  2. Entraîner une unité                   ║");
@@ -226,7 +227,9 @@ public class ConsoleUI {
     }
 
     public int selectUnit(String message) {
-        if (game.getCurrentPlayer().getUnits().isEmpty()) {
+        List<Unit> units = game.getCurrentPlayer().getUnits();
+
+        if (units.isEmpty()) {
             displayError("Aucune unité disponible!");
             return -1;
         }
@@ -234,7 +237,29 @@ public class ConsoleUI {
         System.out.println("\n" + message);
         System.out.println("─".repeat(50));
 
-        return getIntInput("Numéro de l'unité: ") - 1;
+        // Afficher les unités disponibles
+        for (int i = 0; i < units.size(); i++) {
+            Unit u = units.get(i);
+            System.out.printf("%d. %s [%d,%d] - HP:%d/%d%n",
+                    (i + 1), u.getName(), u.getX(), u.getY(),
+                    u.getHp(), u.getMaxHp());
+        }
+        System.out.println("─".repeat(50));
+
+        // Demander et VALIDER l'entrée
+        int choice;
+        while (true) {
+            choice = getIntInput("Numéro de l'unité (1-" + units.size() + "): ");
+
+            // Convertir en index (enlever 1) et vérifier
+            int index = choice - 1;
+
+            if (index >= 0 && index < units.size()) {
+                return index; // ✅ Index valide
+            }
+
+            displayError("Choix invalide ! Choisissez entre 1 et " + units.size());
+        }
     }
 
     public int[] getTargetPosition() {
@@ -246,25 +271,39 @@ public class ConsoleUI {
 
     public int selectEnemyUnit() {
         Player enemy = game.getEnemyPlayer();
+        List<Unit> enemyUnits = enemy.getUnits();
 
-        if (enemy.getUnits().isEmpty()) {
+        if (enemyUnits.isEmpty()) {
             displayError("L'ennemi n'a aucune unité!");
             return -1;
         }
 
-        System.out.println("\n UNITÉS ENNEMIES:");
+        System.out.println("\n🎯 UNITÉS ENNEMIES:");
         System.out.println("─".repeat(50));
-        int i = 1;
-        for (Unit unit : enemy.getUnits()) {
+
+        for (int i = 0; i < enemyUnits.size(); i++) {
+            Unit unit = enemyUnits.get(i);
             System.out.printf("%d. %s [%d,%d] - HP:%d/%d%n",
-                    i++, unit.getName(), unit.getX(), unit.getY(),
+                    (i + 1), unit.getName(), unit.getX(), unit.getY(),
                     unit.getHp(), unit.getMaxHp());
         }
         System.out.println("─".repeat(50));
 
-        return getIntInput("Choisir la cible: ") - 1;
-    }
+        // Demander et VALIDER l'entrée
+        int choice;
+        while (true) {
+            choice = getIntInput("Choisir la cible (1-" + enemyUnits.size() + "): ");
 
+            // Convertir en index (enlever 1) et vérifier
+            int index = choice - 1;
+
+            if (index >= 0 && index < enemyUnits.size()) {
+                return index; // ✅ Index valide
+            }
+
+            displayError("Choix invalide ! Choisissez entre 1 et " + enemyUnits.size());
+        }
+    }
     public void displayCombatResult(CombatResult result, Unit attacker, Unit defender) {
         System.out.println("\n" + "⚔".repeat(30));
         System.out.println("              💥  COMBAT !  💥");
@@ -324,59 +363,142 @@ public class ConsoleUI {
         pause();
     }
 
+
     public void displayMap(int width, int height) {
-        System.out.println("\n CARTE DU JEU:");
-        System.out.println("   " + "─".repeat(width * 2 + 1));
+        System.out.println("\n=== CARTE DU JEU ===");
 
         GameMap map = game.getMap();
+
+        // En-tête avec numéros de colonnes
+        System.out.print("    ");
+        for (int x = 0; x < width; x++) {
+            System.out.print(String.format("%2d ", x));
+        }
+        System.out.println();
+        System.out.println("   +" + "---".repeat(width) + "+");
+
+        // Afficher la carte
         for (int y = 0; y < height; y++) {
-            System.out.print(String.format("%2d│", y));
+            System.out.print(String.format("%2d |", y));
             for (int x = 0; x < width; x++) {
                 Cell cell = map.getCell(x, y);
                 System.out.print(getCellDisplay(cell) + " ");
             }
-            System.out.println("│");
+            System.out.println("|");
         }
-        System.out.println("   " + "─".repeat(width * 2 + 1));
 
-        System.out.print("   ");
+        System.out.println("   +" + "---".repeat(width) + "+");
+
+        // Pied avec numéros de colonnes
+        System.out.print("    ");
         for (int x = 0; x < width; x++) {
-            System.out.print(String.format("%2d", x));
+            System.out.print(String.format("%2d ", x));
         }
-        System.out.println();
+        System.out.println("\n");
 
-        System.out.println("\n📋 Légende:");
-        System.out.println("  🟩 Plaine    🌊 Eau       ⛰️  Montagne   🌲 Forêt");
-        System.out.println("  🔵 Votre unité     🔴 Unité ennemie");
-        System.out.println("  🏠 Votre bâtiment  🏭 Bâtiment ennemi");
+        // Légende
+        System.out.println("LEGENDE:");
+        System.out.println("  .. = Plaine    ~~ = Eau       ^^ = Montagne   TT = Foret");
+        System.out.println("  U1 = Votre unite              U2 = Unite ennemie");
+        System.out.println("  B1 = Votre batiment           B2 = Batiment ennemi");
+
+        // Positions détaillées
+        Player currentPlayer = game.getCurrentPlayer();
+        Player enemyPlayer = game.getEnemyPlayer();
+
+        boolean hasUnits = !currentPlayer.getUnits().isEmpty() || !enemyPlayer.getUnits().isEmpty();
+        boolean hasBuildings = !currentPlayer.getBuildings().isEmpty() || !enemyPlayer.getBuildings().isEmpty();
+
+        if (hasUnits || hasBuildings) {
+            System.out.println("\n");
+            System.out.println("+" + "-".repeat(58) + "+");
+            System.out.println("|" + " ".repeat(15) + "POSITIONS SUR LA CARTE" + " ".repeat(21) + "|");
+            System.out.println("+" + "-".repeat(58) + "+");
+
+            if (!currentPlayer.getUnits().isEmpty()) {
+                System.out.println("|                                                          |");
+                System.out.println("| >> VOS UNITES:                                           |");
+                System.out.println("|" + "-".repeat(58) + "|");
+                int i = 1;
+                for (Unit unit : currentPlayer.getUnits()) {
+                    String line = String.format("| %d. %-12s [%2d,%-2d] HP:%-3d/%-3d ATK:%-2d DEF:%-2d RNG:%-2d",
+                            i++, unit.getName(), unit.getX(), unit.getY(),
+                            unit.getHp(), unit.getMaxHp(), unit.getAttack(),
+                            unit.getDefense(), unit.getRange());
+                    // Compléter avec des espaces pour atteindre 59 caractères
+                    int padding = 59 - line.length();
+                    System.out.println(line + " ".repeat(Math.max(0, padding)) + "|");
+                }
+            }
+
+            if (!enemyPlayer.getUnits().isEmpty()) {
+                System.out.println("|                                                          |");
+                System.out.println("| >> UNITES ENNEMIES:                                      |");
+                System.out.println("|" + "-".repeat(58) + "|");
+                int i = 1;
+                for (Unit unit : enemyPlayer.getUnits()) {
+                    String line = String.format("| %d. %-12s [%2d,%-2d] HP:%-3d/%-3d",
+                            i++, unit.getName(), unit.getX(), unit.getY(),
+                            unit.getHp(), unit.getMaxHp());
+                    int padding = 59 - line.length();
+                    System.out.println(line + " ".repeat(Math.max(0, padding)) + "|");
+                }
+            }
+
+            if (!currentPlayer.getBuildings().isEmpty()) {
+                System.out.println("|                                                          |");
+                System.out.println("| >> VOS BATIMENTS:                                        |");
+                System.out.println("|" + "-".repeat(58) + "|");
+                for (Building b : currentPlayer.getBuildings()) {
+                    String line = String.format("| - %-30s [%2d,%-2d]",
+                            b.getName(), b.getX(), b.getY());
+                    int padding = 59 - line.length();
+                    System.out.println(line + " ".repeat(Math.max(0, padding)) + "|");
+                }
+            }
+
+            if (!enemyPlayer.getBuildings().isEmpty()) {
+                System.out.println("|                                                          |");
+                System.out.println("| >> BATIMENTS ENNEMIS:                                    |");
+                System.out.println("|" + "-".repeat(58) + "|");
+                for (Building b : enemyPlayer.getBuildings()) {
+                    String line = String.format("| - %-30s [%2d,%-2d]",
+                            b.getName(), b.getX(), b.getY());
+                    int padding = 59 - line.length();
+                    System.out.println(line + " ".repeat(Math.max(0, padding)) + "|");
+                }
+            }
+
+            System.out.println("+" + "-".repeat(58) + "+");
+        }
 
         pause();
     }
-
     private String getCellDisplay(Cell cell) {
+        // Priorité : Unité > Bâtiment > Terrain
         if (cell.getUnit() != null) {
             Unit unit = cell.getUnit();
             if (game.getPlayer1().getUnits().contains(unit)) {
-                return "🔵"; // Unité Joueur 1
+                return "U1"; // Unité Joueur 1
             } else {
-                return "🔴"; // Unité Joueur 2
+                return "U2"; // Unité Joueur 2
             }
         }
 
         if (cell.getBuilding() != null) {
             Building building = cell.getBuilding();
             if (game.getPlayer1().getBuildings().contains(building)) {
-                return "🏠"; // Bâtiment Joueur 1
+                return "B1"; // Bâtiment Joueur 1
             } else {
-                return "🏭"; // Bâtiment Joueur 2
+                return "B2"; // Bâtiment Joueur 2
             }
         }
 
         return switch(cell.getTerrainType()) {
-            case GRASS -> "🟩";
-            case WATER -> "🌊";
-            case MOUNTAIN -> "⛰️";
-            case FOREST -> "🌲";
+            case GRASS -> "..";     // Plaine
+            case WATER -> "~~";     // Eau
+            case MOUNTAIN -> "^^";  // Montagne
+            case FOREST -> "TT";    // Forêt (Trees)
         };
     }
 

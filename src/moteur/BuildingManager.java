@@ -5,7 +5,7 @@ import model.Cell;
 import model.GameMap;
 import model.Player;
 
-class BuildingManager {
+public class BuildingManager {
     private Player player;
     private GameMap map;
 
@@ -15,30 +15,25 @@ class BuildingManager {
     }
 
     public boolean constructBuilding(Building building, int x, int y) {
+        // Vérifier si la case existe
+        Cell cell = map.getCell(x, y);
+        if (cell == null) {
+            return false;
+        }
+        if (!cell.canPlace(building)) {
+            return false;
+        }
+
         if (!player.canAfford(building)) {
             return false;
         }
 
-        Cell cell = map.getCell(x, y);
-        if (cell == null || !cell.canPlace(building)) {
-            return false;
-        }
-
         player.spendResources(building);
+
         building.setPosition(x, y);
         building.build();
+
         cell.setBuilding(building);
-
-        return true;
-    }
-
-    public boolean constructBuilding(Building building) {
-        if (!player.canAfford(building)) {
-            return false;
-        }
-
-        player.spendResources(building);
-        building.build();
 
         return true;
     }

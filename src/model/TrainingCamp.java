@@ -1,9 +1,10 @@
 package model;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class TrainingCamp extends Building {
+public class TrainingCamp extends Building{
     public TrainingCamp() {
         super("Camp d'Entraînement", 3);
     }
@@ -25,13 +26,5 @@ public class TrainingCamp extends Building {
         return new HashMap<>(); // Ne produit pas de ressources
     }
 
-    public Unit trainUnit(String unitType) {
-        return switch(unitType.toLowerCase()) {
-            case "soldier" -> new Soldier();
-            case "archer" -> new Archer();
-            case "cavalry" -> new Cavalry();
-            default -> null;
-        };
-    }
 }
 

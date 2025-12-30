@@ -1,8 +1,10 @@
 package model;
 
+import interfaces.Producible;
+
 import java.util.Map;
 
-public abstract class Building {
+public abstract class Building implements Producible {
     protected String name;
     protected int constructionTime;
     protected boolean isBuilt;
