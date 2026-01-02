@@ -14,12 +14,6 @@ Dusabe Landry
 Naimi Meriem
 Niyibogora Jean Claude
 
-## UML Diagram
-diagramme UML représente la structure du projet.
-La classe Game gère deux joueurs.
-Player est une classe générale, et Archer est une spécialisation qui hérite de Player.
-Les attributs sont privés pour respecter l’encapsulation
-
 ## Comment Jouer
 
 .Le jeu s’exécute dans le terminal (console)
